@@ -382,13 +382,21 @@ This validated:
 
 Horizontal Pod Autoscaler calculates desired replicas using:
 
-:contentReference[oaicite:0]{index=0}
+```text
+DesiredReplicas = CurrentReplicas × (CurrentMetricValue / DesiredMetricValue)
+```
 
 Example observed during testing:
 
-:contentReference[oaicite:1]{index=1}
+```text
+DesiredReplicas = 1 × (148 / 50) ≈ 2.96
+```
 
-Kubernetes scaled the deployment progressively as CPU utilization remained above the configured threshold.
+Since CPU utilization remained above the configured threshold, Kubernetes progressively scaled the deployment from:
+
+```text
+1 → 2 → 3 → 4
+```
 
 ---
 
