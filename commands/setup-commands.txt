@@ -1,0 +1,169 @@
+# ==========================================
+# AWS CLI Verification
+# ==========================================
+
+aws --version
+
+# ==========================================
+# kubectl Verification
+# ==========================================
+
+kubectl version --client
+
+# ==========================================
+# eksctl Verification
+# ==========================================
+
+eksctl version
+
+# ==========================================
+# Configure AWS Credentials
+# ==========================================
+
+aws configure
+
+# ==========================================
+# Create EKS Cluster
+# ==========================================
+
+eksctl create cluster ^
+--name hpa-demo-cluster ^
+--region ap-south-1 ^
+--nodegroup-name linux-nodes ^
+--node-type t3.medium ^
+--nodes 2
+
+# ==========================================
+# Verify Cluster
+# ==========================================
+
+kubectl get nodes
+
+kubectl cluster-info
+
+kubectl get pods -A
+
+# ==========================================
+# Install Metrics Server
+# ==========================================
+
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+
+# ==========================================
+# Verify Metrics Server
+# ==========================================
+
+kubectl get deployment metrics-server -n kube-system
+
+kubectl get pods -n kube-system
+
+# ==========================================
+# Verify Metrics Collection
+# ==========================================
+
+kubectl top nodes
+
+kubectl top pods -A
+
+# ==========================================
+# Patch Metrics Server (If Required)
+# ==========================================
+
+kubectl edit deployment metrics-server -n kube-system
+
+# Add:
+# - --kubelet-insecure-tls
+
+# ==========================================
+# Deploy Application
+# ==========================================
+
+kubectl apply -f manifests/deployment.yaml
+
+kubectl apply -f manifests/service.yaml
+
+# ==========================================
+# Verify Deployment
+# ==========================================
+
+kubectl get deployments
+
+kubectl get pods
+
+kubectl get svc
+
+kubectl describe deployment hpa-demo-app
+
+# ==========================================
+# Deploy HPA
+# ==========================================
+
+kubectl apply -f manifests/hpa.yaml
+
+# ==========================================
+# Verify HPA
+# ==========================================
+
+kubectl get hpa
+
+kubectl describe hpa hpa-demo
+
+# ==========================================
+# Watch HPA Live
+# ==========================================
+
+kubectl get hpa -w
+
+# ==========================================
+# Watch Pods Live
+# ==========================================
+
+kubectl get pods -w
+
+# ==========================================
+# Watch Metrics Live
+# ==========================================
+
+kubectl top pods --watch
+
+# ==========================================
+# Create Load Generator
+# ==========================================
+
+kubectl run load-generator --image=busybox --restart=Never --command -- sh -c "while true; do wget -q -O- http://hpa-demo-service; done"
+
+# ==========================================
+# Create Additional Load Generator (Optional)
+# ==========================================
+
+kubectl run load-generator-2 --image=busybox --restart=Never --command -- sh -c "while true; do wget -q -O- http://hpa-demo-service; done"
+
+# ==========================================
+# Verify Scaling
+# ==========================================
+
+kubectl get hpa
+
+kubectl get deployment
+
+kubectl get pods
+
+# ==========================================
+# Stop Load Generation
+# ==========================================
+
+kubectl delete pod load-generator
+
+kubectl delete pod load-generator-2
+
+# ==========================================
+# Delete Kubernetes Resources
+# ==========================================
+
+kubectl delete -f manifests/
+
+# ==========================================
+# Delete EKS Cluster
+# ==========================================
+
+eksctl delete cluster --name hpa-demo-cluster --region ap-south-1
