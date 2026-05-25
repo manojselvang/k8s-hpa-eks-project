@@ -1,4 +1,4 @@
-# Kubernetes Horizontal Pod Autoscaler (HPA) on AWS EKS
+# Kubernetes Horizontal Pod Autoscaler (HPA) on AWS EKS using Metrics Server API
 
 ## Project Overview
 
