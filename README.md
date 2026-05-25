@@ -532,6 +532,7 @@ The project validated:
 The implementation provides practical understanding of Kubernetes autoscaling behavior and production-oriented operational workflows.
 
 Author:
-Manoj Selvan G
-manojselvang@gmail.com
-github.com/manojselvang
+- Manoj Selvan G
+- manojselvang@gmail.com
+- [github.com/manojselvang](https://github.com/manojselvang)
+- https://www.linkedin.com/in/manoj-selvan-g/
